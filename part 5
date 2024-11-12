@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Member Information</title>
+</head>
+<body>
+<?php
+ session_start();
+if(isset($_GET['member_identifier']) && !empty($_GET['member_identifier'])) {
+    $member_id = $_GET['member_identifier'];
+
+    
+  if(isset($_SESSION['visitor_name'])) {
+    $visitor_name = $_SESSION['visitor_name'];
+    echo "<p>Hello $visitor_name</p>";
+   }
+
+    $servername = "dragon.kent.ac.uk";
+    $username = "comp3230";
+    $password = "pa33word";
+    $dbname = "comp3230";
+
+    
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    
+    $sql = "SELECT m.name, m.age, l.address, s.title
+            FROM seminar s JOIN member m ON s.memberId = m.memberId
+            JOIN location l ON s.lid = l.lid
+            WHERE m.memberId = ?";
+
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $member_id);
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        echo "<p>Member Information:</p>";
+        while($row = $result->fetch_assoc()) {
+            echo "<p>Name: " . $row["name"]. "<br>Age: " . $row["age"]. "<br>Location: " . $row["address"]. "<br>Seminar Title: " . $row["title"]. "</p>";
+        }
+    } else {
+        echo "<p>No information found for this member.</p>";
+    }
+
+    $stmt->close();
+    $conn->close();
+} else {
+    echo "<p>No member selected.</p>";
+}
+?>
+</body>
+</html>
