@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Seminar Results</title>
+</head>
+<body>
+<?php
+
+session_start();
+
+
+if(isset($_SESSION['visitor_name'])) {
+    $visitor_name = $_SESSION['visitor_name'];
+    echo "<p>Hello $visitor_name</p>";
+}
+
+$servername = "dragon.kent.ac.uk";
+$username = "comp3230";
+$password = "pa33word";
+$dbname = "comp3230";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT m.name, s.title, s.seminarDate
+        FROM seminar s JOIN member m ON s.memberId = m.memberId
+        WHERE seminarDate > ?
+        ORDER BY seminarDate ASC";
+
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $seminarDate);
+
+$seminarDate = '2024-02-10';
+
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    echo "<ul>";
+    while($row = $result->fetch_assoc()) {
+        echo "<li>" . $row["name"]. " - " . $row["title"]. " (" . $row["seminarDate"]. ")</li>";
+    }
+    echo "</ul>";
+} else {
+    echo "0 results";
+}
+
+$stmt->close();
+$conn->close();
+?>
+</body>
+</html>
