@@ -1,0 +1,13 @@
+<?php
+session_start();
+
+if(empty($_GET['entered_name'])) {
+    echo "<p>Please go back and enter a name.</p>";
+} else {
+    $_SESSION['visitor_name'] = $_GET['entered_name'];
+    echo "<p>Hello " . $_SESSION['visitor_name'] . "</p>";
+    echo "<p><a href='task4.php'>Task 4</a></p>";
+    echo "<p><a href='task5.php'>Task 5</a></p>";
+    echo "<p><a href='task6.php'>Task 6</a></p>";
+}
+?>
