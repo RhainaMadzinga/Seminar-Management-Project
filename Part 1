@@ -1,0 +1,23 @@
+/*
+Author: [Rhaina Madzinga]
+*/
+
+
+SELECT m.Name AS member_name, s.title AS seminar_title, s.Seminar_date
+FROM seminars AS s
+JOIN members AS m ON s.Member_id = m.id
+WHERE s.Seminar_date > '2024-02-10'
+ORDER BY s.Seminar_date ASC;
+
+
+SELECT COUNT(s.sid) AS num_seminars, l.location_Name, l.Address
+FROM seminars AS s
+JOIN locations AS l ON s.lid = l.Lid
+GROUP BY l.location_Name, l.Address;
+
+
+SELECT m.Name AS member_name, m.Age AS member_age, l.Address AS location_address, s.title AS seminar_title
+FROM seminars AS s
+JOIN members AS m ON s.Member_id = m.id
+JOIN locations AS l ON s.lid = l.Lid
+WHERE m.id = 'P2432';
