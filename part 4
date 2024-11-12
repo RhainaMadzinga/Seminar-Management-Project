@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Member Selection</title>
+</head>
+<body>
+<form action="task7.php" method="get">
+    <label for="member_id">Select Member:</label>
+    <select name="member_identifier" id="member_id">
+        <?php
+        session_start();
+        
+        if (isset($_SESSION['visitor_name'])) {
+            $visitor_name = $_SESSION['visitor_name'];
+            echo "<p>Hello $visitor_name</p>";
+        }
+
+        $servername = "dragon.kent.ac.uk";
+        $username = "comp3230";
+        $password = "pa33word";
+        $dbname = "comp3230";
+        
+        $conn = new mysqli($servername, $username, $password, $dbname);
+
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        $sql = "SELECT memberId, name FROM member";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo "<option value='" . $row["memberId"] . "'>" . $row["name"] . "</option>";
+            }
+        } else {
+            echo "<option value=''>No members found</option>";
+        }
+
+        $conn->close();
+        ?>
+    </select>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
